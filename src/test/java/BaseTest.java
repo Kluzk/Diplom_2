@@ -23,6 +23,7 @@ public class BaseTest {
     protected String email;
     protected String password;
     protected String name;
+    protected String token;
 
 
     @BeforeClass
@@ -45,9 +46,10 @@ public class BaseTest {
     @DisplayName("Очистка тестовых данных")
     @Description("Удаление пользователя после каждого теста")
     public void after() {
-
         if(authUser(email, password).then().extract().path("accessToken") != null) {
-            deleteUser();
+            token = authUser(email, password).then().extract().path("accessToken").toString().replace("Bearer ", "");
+            deleteUser(token)
+                    .then().assertThat().statusCode(202);
         }
     }
 
@@ -79,9 +81,21 @@ public class BaseTest {
                 .get(USER_API);
     }
 
-    @Step("Удаление пользователя")
-    protected Response deleteUser() {
+    @Step("Изменение информации о пользователе")
+    protected Response changeUserData(String token, String email, String password, String name) {
+        Client client = new Client(email, password, name);
+
         return given()
+                .contentType(ContentType.JSON)
+                .auth().oauth2(token)
+                .body(client)
+                .patch(USER_API);
+    }
+
+    @Step("Удаление пользователя")
+    protected Response deleteUser(String token) {
+        return given()
+                .auth().oauth2(token)
                 .delete(USER_API);
     }
 

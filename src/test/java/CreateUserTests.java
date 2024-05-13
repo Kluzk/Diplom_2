@@ -1,8 +1,5 @@
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import org.junit.After;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -10,7 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class CreateUserTests extends BaseTest {
 
     @Test
-    @DisplayName("Создание уникального пользователя")
+    @DisplayName("Проверка создания уникального пользователя")
     @Description("Создание пользователя с уникальным именем и почтой")
     public void checkCreateUniqueUser() {
         createUser(email, password, name)
@@ -22,7 +19,7 @@ public class CreateUserTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание пользователя, который уже зарегистрирован")
+    @DisplayName("Проверка создания пользователя, который уже зарегистрирован")
     @Description("Повторная попытка создания пользователя с теми же данными")
     public void checkCreateDuplicateUser() {
         createUser(email, password, name)
@@ -43,7 +40,7 @@ public class CreateUserTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание пользователя без обязательного поля email")
+    @DisplayName("Проверка создания пользователя без обязательного поля email")
     @Description("Попытка создания пользователя без обязательного поля email")
     public void checkCreateUserWithoutEmail() {
         createUser(null, password, name)
@@ -57,7 +54,7 @@ public class CreateUserTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание пользователя без обязательного поля password")
+    @DisplayName("Проверка создания пользователя без обязательного поля password")
     @Description("Попытка создания пользователя без обязательного поля password")
     public void checkCreateUserWithoutPassword() {
         createUser(email, null, name)
@@ -71,7 +68,7 @@ public class CreateUserTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Создание пользователя без обязательного поля name")
+    @DisplayName("Проверка создания пользователя без обязательного поля name")
     @Description("Попытка создания пользователя без обязательного поля name")
     public void checkCreateUserWithoutName() {
         createUser(email, password, null)

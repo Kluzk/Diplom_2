@@ -9,7 +9,7 @@ import static org.hamcrest.Matchers.emptyOrNullString;
 public class LoginTests extends BaseTest {
 
     @Test
-    @DisplayName("Логирование существующего пользователя")
+    @DisplayName("Проверка входа существующего пользователя")
     @Description("Вход существующего пользователя")
     public void checkLoginExistUser() {
         createUser(email, password, name)
@@ -30,8 +30,8 @@ public class LoginTests extends BaseTest {
     }
 
     @Test
-    @DisplayName("Логирование существующего пользователя")
-    @Description("Вход существующего пользователя")
+    @DisplayName("Проверка входа неизвестного пользователя")
+    @Description("Попытка входа пользователя с неверным логином и паролем")
     public void checkLoginWithNotValidLoginAndPass() {
         authUser(email, password)
                 .then()
