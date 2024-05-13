@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import models.Client;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class BaseTest {
 
@@ -34,8 +33,8 @@ public class BaseTest {
     }
 
     @Before
-    @DisplayName("Инициализация тестовых данных")
-    @Description("Инициализация нового пользователя для теста")
+    @DisplayName("Инициализация нового пользователя для теста")
+    @Description("Инициализация логина, пароля и почтового адреса")
     public void initTest() {
         email = faker.internet().emailAddress();
         password = faker.internet().password();
