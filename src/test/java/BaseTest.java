@@ -5,6 +5,7 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import models.Ingredients;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -15,9 +16,10 @@ import static io.restassured.RestAssured.given;
 public class BaseTest {
 
     private static final String URI = "https://stellarburgers.nomoreparties.site/api";
-    private static final String REGISTER_API = "/auth/register";
-    private static final String LOGIN_API = "/auth/login";
-    private static final String USER_API = "/auth/user";
+    protected static final String REGISTER_API = "/auth/register";
+    protected static final String LOGIN_API = "/auth/login";
+    protected static final String USER_API = "/auth/user";
+
 
     protected static Faker faker = new Faker();
     protected String email;
@@ -47,10 +49,15 @@ public class BaseTest {
     @Description("Удаление пользователя после каждого теста")
     public void after() {
         if(authUser(email, password).then().extract().path("accessToken") != null) {
-            token = authUser(email, password).then().extract().path("accessToken").toString().replace("Bearer ", "");
+            setupToken();
             deleteUser(token)
                     .then().assertThat().statusCode(202);
         }
+    }
+
+    @Step()
+    protected void setupToken() {
+        token = authUser(email, password).then().extract().path("accessToken").toString().replace("Bearer ", "");
     }
 
     @Step("Создание пользователя")
@@ -65,7 +72,7 @@ public class BaseTest {
 
     @Step("Авторизация пользователя")
     protected Response authUser(String email, String password) {
-        Client client = new Client(email, password);
+        Client client = new Client(email, password, null);
 
         return given()
                 .contentType(ContentType.JSON)
@@ -81,22 +88,10 @@ public class BaseTest {
                 .get(USER_API);
     }
 
-    @Step("Изменение информации о пользователе")
-    protected Response changeUserData(String token, String email, String password, String name) {
-        Client client = new Client(email, password, name);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .auth().oauth2(token)
-                .body(client)
-                .patch(USER_API);
-    }
-
     @Step("Удаление пользователя")
     protected Response deleteUser(String token) {
         return given()
                 .auth().oauth2(token)
                 .delete(USER_API);
     }
-
 }
